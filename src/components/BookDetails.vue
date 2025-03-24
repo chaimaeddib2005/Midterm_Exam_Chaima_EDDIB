@@ -1,46 +1,102 @@
 <template>
-    <div v-if="book" style="display:flex;flex-direction:row;">
-        <div>
-      <h2 style="text-align:center;color:blue;">{{ book.titre }}</h2>
-      <p>{{ book.categorie }}</p>
-        <p>{{ book.auteur }}</p>
-        <p>{{ status }}</p>
-      <p style="border:1px solid black;text-align:justify;font-size:2vw;margin:1vw;padding:1vw;">{{ post.resume }}</p>
-        <p style="color:red;font-weight:bold;margin-left:2vw;margin-right:2vw;">{{book.annee }}</p>  
-        </div>
-        <div>
-            <img :src="book.image" alt="book.title" style="width:100%;height:100%;"/>
-        </div>
+    <div v-if="book" class="book-details">
+      <div class="details">
+        <h2 class="title">{{ book.titre }}</h2>
+        <p class="category">{{ book.categorie }}</p>
+        <p class="author">{{ book.auteur }}</p>
+        <p class="status">{{ bookStatus }}</p>
+        <p class="resume">{{ book.resume }}</p>
+        <p class="year">{{ book.annee }}</p>  
       </div>
+      <div class="image-container">
+        <img :src="book.image" :alt="book.titre" class="book-image" />
+      </div>
+    </div>
     <div v-else>
       <p>Chargement...</p>
     </div>
-  </template>
+</template>
   
-  <script>
-  
-  export default {
-    data() {
-  
-      return {
-        post: null,
-      };
+<script>
+export default {
+  data() {
+    return {
+      book: null,
+    };
+  },
+  async mounted() {
+    const bookId = this.$route.params.id;
+    try {
+      const response = await fetch("http://localhost:3003/livres");
+      const books = await response.json();
+      this.book = books.find(book => book.id == bookId);
+    } catch (error) {
+      console.error("Erreur de chargement des livres:", error);
+    }
+  },
+  computed: {
+    bookStatus() {
+      return this.book?.disponible ? "Disponible" : "Emprunté";
     },
-    async mounted() {
-      const bookId = this.$route.params.id;
-      try {
-        const response = await fetch("http://localhost:3003/livres"); // Fetch JSON data
-        const books = await response.json();
-        this.book = books.find(book => book.id == bookId); // Find the matching post
-      } catch (error) {
-        console.error("Erreur de chargement des livres:", error);
-      }
-    },
-    computed: {
-      status() {
-        return this.book ? "Disponible" : "Emprunté";
-      },
-    },
-  };
-  </script>
+  },
+};
+</script>
   
+<style scoped>
+.book-details {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.details {
+  flex: 1;
+  padding: 1rem;
+}
+
+.title {
+  text-align: center;
+  color: #007bff;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.category, .author, .status {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0.5rem 0;
+}
+
+.resume {
+  border: 1px solid #ddd;
+  text-align: justify;
+  font-size: 1rem;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.year {
+  color: red;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.image-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+</style>

@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "./components/LibraryView.vue";
+import LibraryView from "./components/LibraryView.vue";
 import BookDetails from "./components/BookDetails.vue";
-const routes = [
-  { path: "/", component: Home },
 
+const routes = [
+  { path: "/", component: LibraryView }, 
   { path: "/book/:id", component: BookDetails, props: true },
 ];
 
