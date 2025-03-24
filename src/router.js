@@ -1,12 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "./views/Home.vue";
-import CreatePostView from "./views/CreatePostView.vue";
-import PostDetailView from "./views/PostDetailView.vue";
-
+import Home from "./components/LibraryView.vue";
+import BookDetails from "./components/BookDetails.vue";
 const routes = [
   { path: "/", component: Home },
-  { path: "/addPost", component: CreatePostView },
-  { path: "/post/:id", component: PostDetailView, props: true },
+
+  { path: "/book/:id", component: BookDetails, props: true },
 ];
 
 const router = createRouter({
