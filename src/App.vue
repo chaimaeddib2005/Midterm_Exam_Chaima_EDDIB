@@ -7,7 +7,6 @@
 <script>
 
 export default {
-  
   mounted() {
     console.log("✅ App.vue est monté !");
   }
